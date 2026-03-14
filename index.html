@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Career Story Lab</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(180deg, #eef6ff, #f8fbff);
+      color: #1f2937;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 30px auto;
+      background: #ffffff;
+      border-radius: 18px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.10);
+      padding: 28px;
+    }
+
+    h1, h2, h3 {
+      margin-top: 0;
+    }
+
+    h1, .center {
+      text-align: center;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #4b5563;
+      margin-bottom: 22px;
+      line-height: 1.5;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .card {
+      background: #f9fbff;
+      border: 1px solid #dbe7ff;
+      border-radius: 14px;
+      padding: 20px;
+      margin-top: 18px;
+    }
+
+    .story-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    @media (max-width: 900px) {
+      .story-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .story-card {
+      background: #ffffff;
+      border: 1px solid #dbe7ff;
+      border-radius: 14px;
+      padding: 18px;
+    }
+
+    .story-card p {
+      color: #475569;
+      line-height: 1.5;
+      min-height: 48px;
+    }
+
+    .prompt-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 16px;
+      border: 1px solid #c9d5ea;
+      background: #fff;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 16px;
+      border: none;
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .primary-btn {
+      background: #2563eb;
+    }
+
+    .primary-btn:hover {
+      background: #1d4ed8;
+    }
+
+    .secondary-btn {
+      background: #64748b;
+    }
+
+    .secondary-btn:hover {
+      background: #475569;
+    }
+
+    .green-btn {
+      background: #0f766e;
+    }
+
+    .green-btn:hover {
+      background: #115e59;
+    }
+
+    .button-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .story-output {
+      white-space: pre-wrap;
+      line-height: 1.85;
+      font-size: 18px;
+      background: #ffffff;
+      border: 1px solid #dbe7ff;
+      border-radius: 14px;
+      padding: 18px;
+      margin-top: 16px;
+    }
+
+    .quote-box {
+      margin-top: 18px;
+      padding: 16px;
+      border-radius: 14px;
+      background: #ecfdf5;
+      border: 1px solid #86efac;
+    }
+
+    .quote-text {
+      font-size: 18px;
+      font-style: italic;
+      line-height: 1.6;
+      margin-bottom: 8px;
+    }
+
+    .quote-author {
+      font-weight: 700;
+      color: #166534;
+    }
+
+    .small {
+      color: #64748b;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .header-pill {
+      display: inline-block;
+      margin: 0 auto 10px auto;
+      padding: 8px 14px;
+      background: #eef2ff;
+      border: 1px solid #c7d2fe;
+      border-radius: 999px;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="homeScreen">
+      <h1>Career Story Lab</h1>
+      <p class="subtitle">
+        Pick a story, fill in the prompts, and generate a ridiculous-but-helpful career story.
+        This is basically Mad Libs with better life choices.
+      </p>
+
+      <div class="story-grid" id="storyGrid"></div>
+    </div>
+
+    <div id="formScreen" class="hidden">
+      <div class="center">
+        <div class="header-pill">Story Builder</div>
+      </div>
+      <h2 id="storyTitle"></h2>
+      <p class="subtitle" id="storyIntro"></p>
+
+      <div class="card">
+        <div class="prompt-list" id="promptContainer"></div>
+
+        <div class="button-row">
+          <button class="secondary-btn" onclick="goHome()">Back to Stories</button>
+          <button class="green-btn" onclick="generateStory()">Generate Story</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="resultScreen" class="hidden">
+      <div class="center">
+        <div class="header-pill">Finished Story</div>
+      </div>
+      <h2 id="resultTitle"></h2>
+
+      <div class="card">
+        <div id="storyOutput" class="story-output"></div>
+
+        <div class="quote-box">
+          <div class="quote-text" id="quoteText"></div>
+          <div class="quote-author" id="quoteAuthor"></div>
+        </div>
+
+        <p class="small">
+          Reminder: students usually have more in them than they realize. Sometimes they just need a better question,
+          a better plan, and slightly fewer bad ideas.
+        </p>
+
+        <div class="button-row">
+          <button class="secondary-btn" onclick="editCurrentStory()">Edit Answers</button>
+          <button class="primary-btn" onclick="goHome()">Choose Another Story</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const quotes = [
+      {
+        text: "The future belongs to those who believe in the beauty of their dreams.",
+        author: "Eleanor Roosevelt"
+      },
+      {
+        text: "You gain strength, courage and confidence by every experience in which you really stop to look fear in the face.",
+        author: "Eleanor Roosevelt"
+      },
+      {
+        text: "You must do the thing you think you cannot do.",
+        author: "Eleanor Roosevelt"
+      },
+      {
+        text: "Effort and courage are not enough without purpose and direction.",
+        author: "John F. Kennedy"
+      },
+      {
+        text: "We must use time as a tool, not as a couch.",
+        author: "John F. Kennedy"
+      }
+    ];
+
+    const stories = [
+      {
+        id: 1,
+        title: "The Extremely Serious Career Conversation",
+        intro: "One day, I met with a student who wanted to become a...",
+        prompts: [
+          "What is your dream job?",
+          "What skill or talent do you have?",
+          "What is a funny bad habit you or someone has?",
+          "Name a random activity someone does",
+          "Name a silly job title",
+          "What is an important value with working? (good salary, good leadership, helping others, etc.)",
+          "Name a shallow quality (slacking at work, being late all the time, stealing, etc.)",
+          "What is your future goal with work? (good lifestyle, family, happiness, good bank account, etc.)",
+          "Name a large number",
+          "Name an interest or hobby you have",
+          "Name a ridiculous career you would never do",
+          "What big dream do you have?"
+        ],
+        template:
+`One day, I met with a student who wanted to become a "{0}."
+
+They said their biggest strength was "{1},"
+but their biggest weakness was "{2}."
+
+When I asked why they chose that career, they said,
+"Because I really love {3}
+and I don’t want to end up as a {4}."
+
+I nodded seriously and said,
+"Have you considered the importance of {5}?"
+
+They blinked at me and said,
+"I thought careers were just about {6}."
+
+That’s when I dramatically explained that choosing a career affects your
+"{7}"
+for approximately "{8}" years.
+
+We then explored careers involving "{9}"
+and discovered that with the right plan, certifications, and education,
+they could avoid becoming a professional "{10}."
+
+By the end of our conversation, the student realized that career coaching isn’t about telling them what to do —
+it’s about helping them turn "{11}"
+into a real plan.
+
+And possibly avoiding living in their mom’s basement forever.`
+      },
+      {
+        id: 2,
+        title: "The 5-Minute Rapid-Fire Version",
+        intro: "Fast decisions. Questionable assumptions. Slightly improved career planning.",
+        prompts: [
+          "What is your dream job?",
+          "What is a ridiculous job?",
+          "Name a hobby",
+          "What is something boring?",
+          "Name a small number",
+          "Name a dollar amount",
+          "Name something expensive",
+          "Name a type of certification or degree",
+          "Name a skill that you have"
+        ],
+        template:
+`I once met a student who wanted to become a(n) {0}.
+
+Their backup plan was to become a {1}.
+
+They chose this career because they enjoy {2}
+and absolutely refuse to {3}.
+
+When I asked how much schooling it required, they said,
+"I was hoping for about {4} day(s)."
+
+We calculated that this career could earn them ${5} per year,
+which is just enough to afford a {6}.
+
+After five minutes of actual research, they realized they needed a
+{7}
+and skills like {8}.
+
+Moral of the story:
+Dream big — but maybe Google it first.`
+      },
+      {
+        id: 3,
+        title: "When I Grow Up (Middle School Version)",
+        intro: "This one is for the future-planning crowd with just enough chaos.",
+        prompts: [
+          "Name a career",
+          "What is something you like doing?",
+          "Name a talent you or someone has",
+          "What is a silly job?",
+          "Name a random food",
+          "What is something you wish you had?",
+          "Name an important person",
+          "Give me a number",
+          "List a type of training or type of school",
+          "Name a skill that you have",
+          "What is something that distracts you?"
+        ],
+        template:
+`When I grow up, I want to be a(n) {0}.
+
+Mainly because I love {1}
+and I am amazing at {2}.
+
+I do NOT want to end up as a {3}
+living off of {4} forever.
+
+A career coach once told me that my future job should help me:
+
+Earn enough money to buy a {5}
+
+Support my {6}
+
+And feel proud for at least {7} years.
+
+To make that happen, I might need:
+
+{8}
+
+Practice in {9}
+
+And fewer hours spent on {10}.
+
+Turns out "winging it" is not a career plan.`
+      },
+      {
+        id: 4,
+        title: "The Pathway Plot Twist",
+        intro: "Because 'I’ll figure it out later' is not exactly a strategy.",
+        prompts: [
+          "Name a specific career",
+          "Name a type of degree or certification",
+          "Name something good about yourself",
+          "List a dollar amount",
+          "What skill do you have?",
+          "Name a type of training for jobs",
+          "Name a type of work industry (health care, manufacturing, IT, etc.)",
+          "Name a type of high school program or certification",
+          "What short-term goal do you have?",
+          "List a type of credential or experience (part-time job, volunteer work, internship, job shadowing, etc.)",
+          "Name a silly job title"
+        ],
+        template:
+`A student told me they wanted to become a(n) {0}.
+
+I asked, "Great. Do you know if that requires
+a {1}?"
+
+They responded confidently,
+"I assumed I just needed {2}."
+
+After reviewing labor market data, we discovered:
+
+Average salary: ${3}
+
+Required skills: {4}
+
+Required education: {1}
+
+We also explored CTE programs in {6}
+and realized that students can start building skills in {7}.
+
+Instead of guessing, we built a plan that included:
+
+{8}
+
+{9}
+
+And avoiding becoming a full-time {10}.
+
+Because choosing a career isn't about "figuring it out someday."
+It's about building options now.`
+      },
+      {
+        id: 5,
+        title: "The Terrible Career Advice Show",
+        intro: "Terrible advice comes free. Good planning takes slightly more effort.",
+        prompts: [
+          "Name a career",
+          "Name a YouTube channel or TV show",
+          "Name a random person",
+          "What is a skill definitely not needed?",
+          "Make up a type of major (Meme Studies, Snack Engineering, Couch Comfort Studies, etc.)",
+          "Name a ridiculous number",
+          "Give me an adjective",
+          "What is a real skill you have?",
+          "List a type of credential or training (degree, HVAC, Pharmacy Tech, Engineering, etc.)",
+          "List a dollar amount"
+        ],
+        template:
+`Today's student wants to become a {0}.
+
+Their research method?
+Watching {1}
+and asking their {2}.
+
+They believe the job requires:
+
+{3}
+
+A degree in {4}
+
+And at least {5} years of experience.
+
+When I gently suggested actual research, they said,
+"But I already picked it because it sounds {6}."
+
+After 10 minutes of real career exploration, we discovered:
+
+Real required skill: {7}
+
+Actual education path: {8}
+
+Starting salary: ${9}
+
+Turns out guessing isn't a strategy.`
+      },
+      {
+        id: 6,
+        title: "Future Me Is Watching",
+        intro: "A letter to your future self, who hopefully made fewer weird decisions.",
+        prompts: [
+          "Name a silly job",
+          "Name a skill you or someone has",
+          "Name something expensive",
+          "Name a cheap food",
+          "Name a career",
+          "Name something you like to do",
+          "Name a talent someone has",
+          "Name a type of degree or training"
+        ],
+        template:
+`Dear Future Me,
+
+I hope you are not currently working as a {0}
+because you refused to learn {1} in high school.
+
+I also hope you are making enough money to afford a
+{2}
+and not surviving on {3}.
+
+Right now, I'm interested in becoming a {4}
+because I love {5}
+and I'm pretty good at {6}.
+
+If that career requires {7},
+I promise to at least consider it instead of saying
+"I'll figure it out later."
+
+Sincerely,
+Your slightly confused but hopeful self.`
+      },
+      {
+        id: 7,
+        title: "The Pathway Reality Check",
+        intro: "Where confidence meets actual information and gets humbled a little.",
+        prompts: [
+          "Name a type of industry (Marketing, Nursing, etc.)",
+          "Name a program offered at a CTC",
+          "Name a type of credential (degree or certification)",
+          "Name a skilled trade",
+          "Name something needed to be successful (confidence, good hair, etc.)",
+          "Name a dollar amount",
+          "Name something you wish to have",
+          "List an adjective",
+          "List an action word (planning, researching, training, etc.)"
+        ],
+        template:
+`A student confidently told me they wanted to work in
+{0}.
+
+I asked if they knew about:
+
+CTE programs in {1}
+
+Certifications like {2}
+
+Or apprenticeships in {3}
+
+They responded,
+"I thought I just needed {4}."
+
+We then calculated how many years that career could impact:
+
+Their income: ${5}
+
+Their lifestyle: {6}
+
+Their stress level: {7}
+
+By the end, they realized career planning is less about luck
+and more about {8}.`
+      },
+      {
+        id: 8,
+        title: "The Backup Plan Disaster",
+        intro: "Hope is nice. A backup plan is nicer.",
+        prompts: [
+          "List a career",
+          "What is an extremely unrealistic job?",
+          "List a time of day",
+          "List a skill you or someone else may have",
+          "Name something that is distracting",
+          "List an age",
+          "What is a related career to what you want to do?",
+          "List an internship or program",
+          "List a soft skill (communicative, team-worker, problem solver, flexible, critical thinker, etc.)"
+        ],
+        template:
+`My dream job is to be a {0}.
+
+If that doesn't work out, I'll become a
+{1}.
+
+My plan for success is:
+
+Wake up at {2}
+
+Practice {3}
+
+Avoid {4}
+
+And not panic until I'm at least {5} years old.
+
+A career coach once told me that good planning includes:
+
+Exploring {6}
+
+Gaining experience through {7}
+
+Building skills like {8}.
+
+Because "hope" is not a retirement strategy.`
+      }
+    ];
+
+    let currentStory = null;
+    let currentAnswers = [];
+
+    function escapeHtml(str) {
+      return str
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
+    }
+
+    function fillTemplate(template, answers) {
+      return template.replace(/\{(\d+)\}/g, (_, index) => {
+        return answers[Number(index)] ?? "";
+      });
+    }
+
+    function randomQuote() {
+      return quotes[Math.floor(Math.random() * quotes.length)];
+    }
+
+    function showScreen(screenId) {
+      document.getElementById("homeScreen").classList.add("hidden");
+      document.getElementById("formScreen").classList.add("hidden");
+      document.getElementById("resultScreen").classList.add("hidden");
+      document.getElementById(screenId).classList.remove("hidden");
+    }
+
+    function renderHome() {
+      const grid = document.getElementById("storyGrid");
+      grid.innerHTML = "";
+
+      stories.forEach(story => {
+        const card = document.createElement("div");
+        card.className = "story-card";
+        card.innerHTML = `
+          <h3>${story.id}. ${story.title}</h3>
+          <p>${story.intro}</p>
+          <div class="small">${story.prompts.length} prompts</div>
+          <button class="primary-btn" onclick="openStory(${story.id})">Open Story</button>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function openStory(id) {
+      currentStory = stories.find(s => s.id === id);
+      currentAnswers = new Array(currentStory.prompts.length).fill("");
+
+      document.getElementById("storyTitle").textContent = currentStory.title;
+      document.getElementById("storyIntro").textContent = currentStory.intro;
+
+      const container = document.getElementById("promptContainer");
+      container.innerHTML = "";
+
+      currentStory.prompts.forEach((prompt, index) => {
+        const wrapper = document.createElement("div");
+        wrapper.innerHTML = `
+          <label for="prompt_${index}">Prompt ${index + 1}: ${prompt}</label>
+          <input id="prompt_${index}" type="text" />
+        `;
+        container.appendChild(wrapper);
+      });
+
+      showScreen("formScreen");
+    }
+
+    function generateStory() {
+      if (!currentStory) return;
+
+      const answers = [];
+      for (let i = 0; i < currentStory.prompts.length; i++) {
+        const value = document.getElementById(`prompt_${i}`).value.trim();
+        if (!value) {
+          alert(`Please answer Prompt ${i + 1} before generating the story.`);
+          return;
+        }
+        answers.push(value);
+      }
+
+      currentAnswers = answers;
+
+      const finishedStory = fillTemplate(currentStory.template, answers);
+      const quote = randomQuote();
+
+      document.getElementById("resultTitle").textContent = currentStory.title;
+      document.getElementById("storyOutput").textContent = finishedStory;
+      document.getElementById("quoteText").textContent = `"${quote.text}"`;
+      document.getElementById("quoteAuthor").textContent = `— ${quote.author}`;
+
+      showScreen("resultScreen");
+    }
+
+    function editCurrentStory() {
+      if (!currentStory) return;
+
+      currentStory.prompts.forEach((_, index) => {
+        const input = document.getElementById(`prompt_${index}`);
+        if (input) input.value = currentAnswers[index] || "";
+      });
+
+      showScreen("formScreen");
+    }
+
+    function goHome() {
+      currentStory = null;
+      currentAnswers = [];
+      showScreen("homeScreen");
+    }
+
+    renderHome();
+  </script>
+</body>
+</html>
