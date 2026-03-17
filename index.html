@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Career Story Lab</title>
   <style>
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
@@ -19,8 +21,20 @@
       margin: 30px auto;
       background: #ffffff;
       border-radius: 18px;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.10);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.10);
       padding: 28px;
+    }
+
+    .logo-wrap {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .logo {
+      max-width: 360px;
+      width: 100%;
+      height: auto;
+      display: inline-block;
     }
 
     h1, h2, h3 {
@@ -60,6 +74,15 @@
     @media (max-width: 900px) {
       .story-grid {
         grid-template-columns: 1fr;
+      }
+
+      .container {
+        margin: 15px;
+        padding: 20px;
+      }
+
+      .logo {
+        max-width: 280px;
       }
     }
 
@@ -188,16 +211,13 @@
       font-weight: 700;
     }
   </style>
-  .logo {
-  display: block;
-  margin: 0 auto 10px auto;
-  max-width: 320px;
-  height: auto;
-}
 </head>
 <body>
   <div class="container">
-    <img src="funnyfutureplans.png" class="logo" alt="Funny Future Plans Logo">
+    <div class="logo-wrap">
+      <img src="funnyfutureplans.png" class="logo" alt="Funny Future Plans Logo" />
+    </div>
+
     <div id="homeScreen">
       <h1>Career Story Lab</h1>
       <p class="subtitle">
@@ -351,7 +371,7 @@ and absolutely refuse to {3}.
 When I asked how much schooling it required, they said,
 "I was hoping for about {4} day(s)."
 
-We calculated that this career could earn them \${5} per year,
+We calculated that this career could earn them $ {5} per year,
 which is just enough to afford a {6}.
 
 After five minutes of actual research, they realized they needed a
@@ -433,7 +453,7 @@ They responded confidently,
 
 After reviewing labor market data, we discovered:
 
-Average salary: \${3}
+Average salary: $ {3}
 
 Required skills: {4}
 
@@ -493,7 +513,7 @@ Real required skill: {7}
 
 Actual education path: {8}
 
-Starting salary: \${9}
+Starting salary: $ {9}
 
 Turns out guessing isn't a strategy.`
       },
@@ -564,7 +584,7 @@ They responded,
 
 We then calculated how many years that career could impact:
 
-Their income: \${5}
+Their income: $ {5}
 
 Their lifestyle: {6}
 
@@ -618,15 +638,6 @@ Because "hope" is not a retirement strategy.`
 
     let currentStory = null;
     let currentAnswers = [];
-
-    function escapeHtml(str) {
-      return str
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#39;");
-    }
 
     function fillTemplate(template, answers) {
       return template.replace(/\{(\d+)\}/g, (_, index) => {
@@ -713,12 +724,14 @@ Because "hope" is not a retirement strategy.`
     function editCurrentStory() {
       if (!currentStory) return;
 
+      showScreen("formScreen");
+
       currentStory.prompts.forEach((_, index) => {
         const input = document.getElementById(`prompt_${index}`);
-        if (input) input.value = currentAnswers[index] || "";
+        if (input) {
+          input.value = currentAnswers[index] || "";
+        }
       });
-
-      showScreen("formScreen");
     }
 
     function goHome() {
